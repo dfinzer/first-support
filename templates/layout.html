@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>My Sweet App</title>
+        <title>First Support</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
     </head>
     <body>
@@ -10,6 +10,8 @@
         <script src="/assets/lib/h5f/js/h5f.min.js"></script>
         <script src="/assets/lib/js-webshim/minified/polyfiller.js"></script>
         <script src="/assets/js/utils.js"></script>
+        <script src="/assets/lib/webcam.min.js"></script>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
         <script>
             // Set up forms.
             var forms = document.getElementsByTagName("form");
@@ -20,6 +22,7 @@
             $.webshims.polyfill('forms forms-ext');
         </script>
         {% include "scripts.html" %}
-        {% block scripts %}{% endblock %}
+        {% block scripts %}
+        {% endblock %}
     </body>
 </html>
