@@ -38,17 +38,10 @@
         });
 
         Webcam.on('error', function(event, error) {
-            if (error && error.name == "PermissionDeniedError") {
-                $("#chromeErrorBox").show();
-                $("#webcamTitle").hide();
-            } else if (event.indexOf("Adobe Flash Player") != -1) {
-                $("#safariErrorBox").show();
-                $("#webcamTitle").hide();
-            }
             if (error) {
-                trackEvent('webcam_error', {'error': error.name});
+                console.log('webcam error: ' + error.name);
             } else {
-                trackEvent('webcam_error', {'error': "unknown"});
+                console.log('webcam error: unknown');
             }
         });
 
@@ -87,11 +80,10 @@
 
         function takeSnapshot() {
             Webcam.snap( function(data_uri) {
-                console.log("SNAPP!");
                 WEBCAM_DATA_URI = data_uri;
 
                 // Extract raw base64 data from Data URI
-                var raw_image_data = WEBCAM_DATA_URI.replace(/^data\:image\/\w+\;base64\,/, '');
+                var rawImageData = WEBCAM_DATA_URI.replace(/^data\:image\/\w+\;base64\,/, '');
 
                 // Create a blob and decode our base64 to binary
                 var image_fmt = '';
@@ -101,7 +93,7 @@
                     throw "Cannot locate image format in Data URI";
                 }
 
-                var blob = new Blob([base64DecToArr(raw_image_data) ], {type: 'image/' + image_fmt} );
+                var blob = new Blob([base64DecToArr(rawImageData) ], {type: 'image/' + image_fmt} );
 
                 var file = new File([blob], "webcam." + image_fmt);
                 file.type = 'image/' + image_fmt;
@@ -128,7 +120,8 @@
         }
 
         function getVideoSize() {
-            $("#cameraView").show();
+            var cameraView = $("#cameraView");
+            cameraView.show();
             var video = $("video")[0];
 
             var desiredWidth = WEBCAM_PORTAL_SCALED_WIDTH;
@@ -139,7 +132,7 @@
                 dest_width: WEBCAM_PORTAL_WIDTH,
                 dest_height: WEBCAM_PORTAL_WIDTH * aspectRatio
             });
-            sizeElement($("#cameraView"), desiredWidth, height);
+            sizeElement(cameraView, desiredWidth, height);
 
             VIDEO_WIDTH = desiredWidth;
             VIDEO_HEIGHT = height;
