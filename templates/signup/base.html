@@ -1,0 +1,17 @@
+{% extends "app.html" %}
+
+{% block body %}
+    {% block signup_body %}{% endblock %}
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="ol-sm-6 col-sm-offset-3">
+                {% for message in messages %}
+                    <li class="list-unstyled"><p class="bg-warning">{{ message }}</p></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    {% block bottom_content %}{% endblock %}
+{% endblock %}

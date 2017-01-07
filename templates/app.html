@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand">
+                    My Sweet App
+                </a>
+            </div>
+        </div>
+    </nav>
+    <section>
+        <div class="container">
+            {% block body %}{% endblock %}
+        </div>
+    </section>
+{% endblock %}

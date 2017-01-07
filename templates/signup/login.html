@@ -1,0 +1,35 @@
+{% extends "signup/base.html" %}
+
+{% block signup_body %}
+    <h1 class="sectionTitle">Log in</h1>
+    <br/>
+    <form class="form-horizontal" data-delay="1000" data-toggle="validator" action="{{ url_for('signup_login', next=next) }}" method="post">
+        <div class="form-group row">
+            <label class="col-sm-4 control-label">Email</label>
+            <div class="col-sm-7">
+                <input name="email" type="email" class="form-control" placeholder=""
+                data-error="Whoops, that doesn't seem to be a valid email." required autofocus>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-4 control-label">Password</label>
+            <div class="col-sm-7">
+                <input name="password" type="password" class="form-control" placeholder=""
+                    data-error="Whoops, please provide a better password." required>
+                <div class="help-block with-errors" style="font-size: 12px;">
+                    <a href="{{ url_for('signup_reset') }}">Forgot your password?</a>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-offset-4 col-sm-6">
+                <button type="submit" class="btn btn-success">Login</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+
+{% block bottom_content %}
+    <div class="text-center">Don't have an account yet? <a href="{{ url_for('signup_email', next=next)  }}">Signup</a></div>
+{% endblock %}
