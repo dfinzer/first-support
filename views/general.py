@@ -35,6 +35,10 @@ def avs_return():
 def start():
     return render_template('start.html')
 
+@app.route('/report')
+def finish():
+    return render_template('report.html')
+
 @app.route('/signal', methods=["POST"])
 def signal():
     if request.method == 'POST':

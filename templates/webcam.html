@@ -3,6 +3,7 @@
 {% block body %}
 <div id="chart"></div>
 <div id="cameraTake">
+    <h1>FILE INCIDENT</h1>
     <div id="cameraView"></div>
     <div class="cameraBox"></div>
 </div>
@@ -11,6 +12,13 @@
     <div class="bar"></div>
 </article>
 </div>
+<a href="javascript:startCountdown()" class="go-button">
+    <img src="/assets/video-camera-icon.png" width="160px" style="opacity: 0.5">
+</a>
+<div class="countdown">3</div>
+<a href="/finish" class="checkbox">
+    <img src="/assets/checkbox-icon.png" width="120px" style="opacity: 0.5">
+</a>
 <div id="resultDisplay">
 </div>
 {% endblock %}
@@ -18,7 +26,7 @@
 {% block scripts %}
     <script>
         var WEBCAM_DATA_URI = "";
-        var WEBCAM_PORTAL_WIDTH = 1000;
+        var WEBCAM_PORTAL_WIDTH = 900;
         var WEBCAM_PORTAL_HEIGHT = 720;
         var WEBCAM_PORTAL_SCALED_WIDTH = WEBCAM_PORTAL_WIDTH / 3.0;
         var WEBCAM_PORTAL_SCALED_HEIGHT = WEBCAM_PORTAL_HEIGHT / 3.0;
@@ -76,6 +84,26 @@
                 : nChr > 96 && nChr < 123 ? nChr - 71
                 : nChr > 47 && nChr < 58 ? nChr + 4
                 : nChr === 43 ? 62 : nChr === 47 ? 63 : 0;
+        }
+
+        function startCountdown() {
+            $(".go-button").fadeOut();
+            setTimeout(function() {
+                $(".countdown").text(3);
+                $(".countdown").fadeIn(function() {
+                    $(".countdown").fadeOut(function() {
+                        $(".countdown").text(2);
+                        $(".countdown").fadeIn(function() {
+                            $(".countdown").fadeOut(function() {
+                                $(".countdown").text(1);
+                                $(".countdown").fadeIn(function() {
+                                    $(".countdown").fadeOut();
+                                });
+                            });
+                        });
+                    });
+                });
+            }, 500);
         }
 
         function takeSnapshot() {

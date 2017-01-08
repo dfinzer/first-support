@@ -11,13 +11,22 @@ article h2 {
 }
 
 #cameraView {
-  margin-top: -80px;
-  margin-left: 100px;
+    margin-top: -80px;
+    margin-left: 146px;
 }
 
 body {
   font-weight: lighter;
   background-color: black;
+  color: white;
+  text-align: center;
+}
+
+h1 {
+  text-align: center;
+  font-weight: lighter;
+  margin-bottom: 0px;
+  margin-top: -20px;
 }
 
 .option {
@@ -32,4 +41,29 @@ body {
   border: 1px solid white;
   border-radius: 5px;
   margin-bottom: 40px;
+}
+
+.option:hover {
+  background-color: white;
+  color: black;
+}
+
+.go-button, .countdown, .checkbox {
+  top: 50%;
+  left: 50%;
+  margin-left: -80px;
+  margin-top: -100px;
+  position: absolute;
+}
+
+.checkbox {
+  margin-left: 348px;
+  margin-top: -209px;
+}
+
+.countdown {
+  font-size: 100px;
+  margin-left: -35px;
+  margin-top: -110px;
+  display: none;
 }
