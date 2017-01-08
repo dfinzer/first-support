@@ -15,6 +15,21 @@ def index():
 def webcam():
     return render_template('webcam.html')
 
+@app.route('/avs')
+def avs():
+    return render_template('avs.html')
+
+@app.route('/avs_return')
+def avs_return():
+	avs_verify_url = "https://api.amazon.com/auth/O2/tokeninfo"
+	avs_access = json.dumps(request.values.__dict__)
+	access_token = request.values.get("access_token")
+	verify = requests.get(avs_verify_url, params={"access_token":access_token}).json()
+	print verify
+	return json.dumps(resp)
+	#return json.dumps(request.values.__dict__)
+	#return render_template('avs_return.html')
+
 @app.route('/signal', methods=["POST"])
 def signal():
     if request.method == 'POST':
