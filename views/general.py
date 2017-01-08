@@ -68,7 +68,9 @@ def signal():
 def dashboard():
     return render_template('dashboard.html')
 
-
+@app.route('/finish')
+def finish():
+    return render_template('finish.html')
 
 @app.route('/pie')
 def pie():
