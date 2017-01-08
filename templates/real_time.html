@@ -114,6 +114,10 @@ svg {
                     $("#data").html("");
                     var dataOut = [];
                     var k = 0;
+                    // var truncation = 20;
+                    // if (dataList.length > truncation) {
+                    //   dataList = dataList.slice(dataList.length - truncation, dataList.length - 1);
+                    // }
                     for (var i = 0; i < dataList.length; i++) {
                         var theDataPoint = dataList[i];
                         var analysis = theDataPoint['FaceAnalysisResults'];
@@ -275,42 +279,42 @@ svg {
               .datum(data)
               .attr("class", "line")
               .attr("d", joyLine)
-              .attr("stroke", "green");
+              .attr("stroke", "#417505");
 
           g.append("path")
               .datum(data)
               .attr("class", "line")
-              .attr("stroke", "purple")
+              .attr("stroke", "#7ED321")
               .attr("d", neutralLine);
 
           g.append("path")
               .datum(data)
               .attr("class", "line")
-              .attr("stroke", "blue")
+              .attr("stroke", "#D9F0FF")
               .attr("d", sadnessLine);
 
           g.append("path")
               .datum(data)
               .attr("class", "line")
-              .attr("stroke", "brown")
+              .attr("stroke", "#F8E81C")
               .attr("d", disgustLine);
 
           g.append("path")
               .datum(data)
               .attr("class", "line")
               .attr("d", angerLine)
-              .attr("stroke", "red");
+              .attr("stroke", "#F6A623");
 
           g.append("path")
               .datum(data)
               .attr("class", "line")
-              .attr("stroke", "orange")
+              .attr("stroke", "#B8E986")
               .attr("d", surpriseLine);
 
           g.append("path")
               .datum(data)
               .attr("class", "line")
-              .attr("stroke", "black")
+              .attr("stroke", "#D0011B")
               .attr("d", fearLine);
 
           var emotionData = d3.scaleOrdinal()
