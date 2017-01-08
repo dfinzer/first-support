@@ -5,3 +5,4 @@ env/
 .idea*
 temp/
 .DS_Store
+dump.rdb

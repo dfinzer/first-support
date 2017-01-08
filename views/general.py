@@ -99,4 +99,8 @@ def dashboard_data():
 @app.route('/admin_index')
 def admin_index():
 	return render_template('admin_index.html')
+
+@app.route('/admin_charts')
+def admin_charts():
+	return render_template('admin_charts.html')
 	
