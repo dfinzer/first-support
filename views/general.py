@@ -69,6 +69,11 @@ def dashboard():
     return render_template('dashboard.html')
 
 
+
+@app.route('/pie')
+def pie():
+    return render_template('pie_chart.html')
+
 @app.route('/dashboard_data')
 def dashboard_data():
     data = [json.loads(x) for x in r.lrange('mood_points', 0, -1)]

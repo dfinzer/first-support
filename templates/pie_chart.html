@@ -1,0 +1,107 @@
+{% extends "app.html" %}
+
+{% block body %}
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        //$('body').css('background-color', "white");
+        function poll() {
+            setTimeout(function() {
+                $.get("/dashboard_data", function(response) {
+                    var rawDataList = JSON.parse(response);
+                    var dataList = [];
+                    for (var l = 0; l < rawDataList.length; l++) {
+                        var aDataPoint = rawDataList[l];
+                        if (aDataPoint['FaceAnalysisResults'] && aDataPoint['FaceAnalysisResults'].length > 0) {
+                            dataList.push(aDataPoint);
+                        }
+                    }
+                    $("#data").html("");
+                    var dataOut = [];
+                    var k = 0;
+                    for (var i = 0; i < dataList.length; i++) {
+                        var theDataPoint = dataList[i];
+                        var analysis = theDataPoint['FaceAnalysisResults'];
+                        if (analysis && analysis.length > 0) {
+                            var data = analysis[0]['EmotionResult'];
+                            var containerDiv = $("<div>").addClass("containerDiv");
+                            var dataPointOut = {'age': k, 'population': data['Joy']};
+                            dataOut.push(dataPointOut);
+                            var emotions = ['Joy', 'Neutral', 'Sadness', 'Disgust', 'Anger', 'Surprise', 'Fear'];
+                            var pieData = [];
+                            for (j = 0; j < emotions.length; j++) {
+                                var newElement = $("<div>").text(emotions[j] + ": " + data[emotions[j]]);
+                                containerDiv.append(newElement);
+                                pieData.push({
+                                    'age': emotions[j],
+                                    'population': data[emotions[j]]
+                                });
+                            }
+                            if (i == 0) {
+                                plotData(pieData);
+                                $("#data").append(containerDiv);
+                            }
+                        }
+                        k++;
+                    }
+                    poll();
+                });
+            }, 500)
+        }
+        poll();
+
+
+
+var width = 960,
+    height = 500,
+    radius = Math.min(width, height) / 2;
+
+var color = d3.scaleOrdinal()
+    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
+var arc = d3.arc()
+    .outerRadius(radius - 10)
+    .innerRadius(0);
+
+var labelArc = d3.arc()
+    .outerRadius(radius - 40)
+    .innerRadius(radius - 40);
+
+var pie = d3.pie()
+    .sort(null)
+    .value(function(d) { return d.population; });
+
+var baseSvg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+  .append("g")
+    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+function plotData(data) {
+    var svg = d3.select("body").select("g");
+
+      var g = svg.selectAll(".arc")
+          .data(pie(data))
+          .enter()
+          .append("g")
+          .attr("class", "arc");
+
+      g.append("path")
+          .attr("d", arc)
+          .style("fill", function(d) { return color(d.data.age); });
+
+      g.append("text")
+          .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
+          .attr("dy", ".35em")
+          .text(function(d) { return d.data.age; });
+}
+
+function type(d) {
+  d.population = +d.population;
+  return d;
+}
+
+    </script>
+{% endblock %}
