@@ -37,7 +37,7 @@ def start():
     return render_template('start.html')
 
 @app.route('/report')
-def finish():
+def report():
     return render_template('report.html')
 
 @app.route('/signal', methods=["POST"])
