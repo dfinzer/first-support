@@ -3,7 +3,8 @@
 {% block body %}
 <div id="chart"></div>
 <div id="cameraTake">
-    <h1>FILE INCIDENT</h1>
+    <br/>
+    <h1 style="margin-top: -40px;">Please describe the incident.</h1>
     <div id="cameraView"></div>
     <div class="cameraBox"></div>
 </div>
@@ -40,7 +41,7 @@
             width: WEBCAM_PORTAL_WIDTH,
             height: WEBCAM_PORTAL_HEIGHT,
             image_format: 'jpeg',
-            jpeg_quality: 20,
+            jpeg_quality: 10,
             force_flash: false,
             flip_horiz: false,
             fps: 45
@@ -117,7 +118,7 @@
                 setTimeout(function() {
                     incrementCounter(value + 1);
                     takeSnapshot();
-                }, 1000)
+                }, 500)
             })(value);
         }
 
