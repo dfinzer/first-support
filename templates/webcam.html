@@ -16,15 +16,16 @@
     <img src="/assets/video-camera-icon.png" width="160px" style="opacity: 0.5">
 </a>
 <div class="countdown">3</div>
-<a href="/finish" class="checkbox">
+<a href="/report" class="checkbox">
     <img src="/assets/checkbox-icon.png" width="120px" style="opacity: 0.5">
 </a>
-<div id="resultDisplay">
-</div>
+<div class="counter">1</div>
+
 {% endblock %}
 
 {% block scripts %}
     <script>
+        var TAKING_SNAPSHOT = false;
         var WEBCAM_DATA_URI = "";
         var WEBCAM_PORTAL_WIDTH = 900;
         var WEBCAM_PORTAL_HEIGHT = 720;
@@ -98,6 +99,9 @@
                                 $(".countdown").text(1);
                                 $(".countdown").fadeIn(function() {
                                     $(".countdown").fadeOut();
+                                    $(".checkbox").fadeIn();
+                                    $(".counter").fadeIn();
+                                    incrementCounter(0);
                                 });
                             });
                         });
@@ -106,7 +110,23 @@
             }, 500);
         }
 
+        function incrementCounter(value) {
+            $(".counter").text("00:" + value);
+            (function(value) {
+                console.log(value);
+                setTimeout(function() {
+                    incrementCounter(value + 1);
+                    takeSnapshot();
+                }, 1000)
+            })(value);
+        }
+
         function takeSnapshot() {
+            if (TAKING_SNAPSHOT) {
+                return;
+            }
+            TAKING_SNAPSHOT = true;
+
             Webcam.snap( function(data_uri) {
                 WEBCAM_DATA_URI = data_uri;
 
@@ -140,6 +160,7 @@
                   } else {
                     alert('An error occurred!');
                   }
+                  TAKING_SNAPSHOT = false;
                 };
             });
         }

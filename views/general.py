@@ -4,6 +4,7 @@ from flask import render_template
 from flask.helpers import url_for
 import requests
 import os
+from app import r
 from flask import request, flash, redirect
 
 EMOVU_WEB_API_BASE_URL = "http://api.emovu.com/api/imageframe"
@@ -42,6 +43,7 @@ def finish():
 @app.route('/signal', methods=["POST"])
 def signal():
     if request.method == 'POST':
+        print "HEREEE"
         f = request.files['file']
         if f:
             form_data = {
@@ -51,5 +53,18 @@ def signal():
             resp = requests.post(EMOVU_WEB_API_BASE_URL, data=form_data, headers={
                 'LicenseKey': "57101804707473939007536796840064911726102607109433933006736111970083711786"
             }, files={"imageFile": f}).json()
-            print resp
-            return json.dumps(resp)
+            data = json.dumps(resp)
+            r.set("mood_data", data)
+            return data
+
+
+
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
+
+
+@app.route('/dashboard_data')
+def dashboard_data():
+    data = json.loads(r.get('mood_data'))
+    return json.dumps(data)

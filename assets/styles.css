@@ -48,7 +48,7 @@ h1 {
   color: black;
 }
 
-.go-button, .countdown, .checkbox {
+.go-button, .countdown, .checkbox, .counter {
   top: 50%;
   left: 50%;
   margin-left: -80px;
@@ -59,11 +59,27 @@ h1 {
 .checkbox {
   margin-left: 348px;
   margin-top: -209px;
+  display: none;
 }
 
-.countdown {
+.counter {
+  margin-left: 500px;
+}
+
+.countdown, .counter {
   font-size: 100px;
   margin-left: -35px;
   margin-top: -110px;
+  display: none;
+}
+
+.counter {
+  display: block;
+    font-size: 40px;
+    margin-left: -403px;
+    margin-top: -200px;
+    background-color: black;
+    padding: 10px;
+    opacity: 0.5;
   display: none;
 }

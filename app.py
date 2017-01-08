@@ -33,8 +33,5 @@ db = SQLAlchemy(app)
 lm = LoginManager(app)
 lm.login_view = 'signup_login'
 
-r = None
-#
-#
 # # Redis.
-# r = redis.from_url(app.config["REDISTOGO_URL"])
+r = redis.from_url(app.config["REDISTOGO_URL"])
