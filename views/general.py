@@ -103,4 +103,8 @@ def admin_index():
 @app.route('/admin_charts')
 def admin_charts():
 	return render_template('admin_charts.html')
+
+@app.route('/video_reports')
+def video_reports():
+    return render_template('video_reports.html')
 	
