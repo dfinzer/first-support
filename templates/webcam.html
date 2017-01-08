@@ -12,15 +12,13 @@
 </article>
 </div>
 <div id="resultDisplay">
-
-
 </div>
 {% endblock %}
 
 {% block scripts %}
     <script>
         var WEBCAM_DATA_URI = "";
-        var WEBCAM_PORTAL_WIDTH = 1280;
+        var WEBCAM_PORTAL_WIDTH = 1000;
         var WEBCAM_PORTAL_HEIGHT = 720;
         var WEBCAM_PORTAL_SCALED_WIDTH = WEBCAM_PORTAL_WIDTH / 3.0;
         var WEBCAM_PORTAL_SCALED_HEIGHT = WEBCAM_PORTAL_HEIGHT / 3.0;
@@ -37,12 +35,6 @@
             force_flash: false,
             flip_horiz: false,
             fps: 45
-        });
-
-        // Listen for when the webcam is live, so we can get the size of the webcam and size appropriately.
-        Webcam.on('live', function(event) {
-            var video = $("video")[0];
-            video.addEventListener('playing', getVideoSize, false);
         });
 
         Webcam.on('error', function(event, error) {
@@ -124,21 +116,6 @@
             });
         }
 
-        function getVideoSize() {
-            var cameraView = $("#cameraView");
-            cameraView.show();
-            var video = $("video")[0];
-
-            var desiredWidth = WEBCAM_PORTAL_SCALED_WIDTH;
-            var aspectRatio = video.videoHeight / video.videoWidth;
-            var height = desiredWidth * aspectRatio;
-            video.removeEventListener('playing', getVideoSize, false);
-            Webcam.set({
-                dest_width: WEBCAM_PORTAL_WIDTH,
-                dest_height: WEBCAM_PORTAL_WIDTH * aspectRatio
-            });
-        }
-
         function renderData() {
             var dataset = [
               { label: 'Abulia', count: 10 },
@@ -180,7 +157,6 @@
         }
 
         // Hide the view while we're adjusting the webcam.
-        $("#cameraView").hide();
         Webcam.attach('#cameraView');
 
         $(document).keypress(function(e) {

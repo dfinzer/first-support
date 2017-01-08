@@ -1,6 +1,7 @@
 import json
 from app import app
 from flask import render_template
+from flask.helpers import url_for
 import requests
 import os
 from flask import request, flash, redirect
@@ -9,7 +10,7 @@ EMOVU_WEB_API_BASE_URL = "http://api.emovu.com/api/imageframe"
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return redirect(url_for('start'))
 
 @app.route('/webcam')
 def webcam():
@@ -29,6 +30,10 @@ def avs_return():
 	return json.dumps(resp)
 	#return json.dumps(request.values.__dict__)
 	#return render_template('avs_return.html')
+
+@app.route('/start')
+def start():
+    return render_template('start.html')
 
 @app.route('/signal', methods=["POST"])
 def signal():
