@@ -22,5 +22,9 @@ def dump_json():
     with open('uploads/output.json', 'w') as f:
         f.write(json.dumps(r.lrange("mood_points", 0, -1)))
 
+@manager.command
+def flush_db():
+    r.flushdb()
+
 if __name__ == '__main__':
     manager.run()
