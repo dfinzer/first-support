@@ -6,14 +6,32 @@
 
 {% block scripts %}
     <script>
-    function poll() {
-        setTimeout(function() {
-            $.get("/dashboard_data", function(response) {
-                $("#data").text(response);
-                poll();
-            });
-        }, 2000)
-    }
-    poll();
-</script>
+        function poll() {
+            setTimeout(function() {
+                $.get("/dashboard_data", function(response) {
+                    var dataList = JSON.parse(response);
+                    $("#data").html("");
+                    for (var i = 0; i < dataList.length; i++) {
+                        var dataPoint = dataList[i];
+                        var analysis = dataPoint['FaceAnalysisResults'];
+                        if (analysis && analysis.length > 0) {
+                            var data = analysis[0]['EmotionResult'];
+                            var containerDiv = $("<div>").addClass("containerDiv");
+                            var emotions = ['Joy', 'Neutral', 'Sadness', 'Disgust', 'Anger', 'Surprise', 'Fear'];
+                            for (j = 0; j < emotions.length; j++) {
+                                console.log(data);
+                                console.log("HERE");
+                                var newElement = $("<div>").text(emotions[j] + ": " + data[emotions[j]]);
+                                containerDiv.append(newElement);
+                            }
+                            containerDiv.append($("<div>").text("--------"));
+                            $("#data").append(containerDiv);
+                        }
+                    }
+                    poll();
+                });
+            }, 2000)
+        }
+        poll();
+    </script>
 {% endblock %}

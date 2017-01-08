@@ -54,8 +54,7 @@ def signal():
                 'LicenseKey': "57101804707473939007536796840064911726102607109433933006736111970083711786"
             }, files={"imageFile": f}).json()
             data = json.dumps(resp)
-            r.set("mood_data", data)
-            #r.append()
+            r.lpush("mood_points", data)
             return data
 
 
@@ -67,5 +66,5 @@ def dashboard():
 
 @app.route('/dashboard_data')
 def dashboard_data():
-    data = json.loads(r.get('mood_data'))
+    data = [json.loads(x) for x in r.lrange('mood_points', 0, -1)]
     return json.dumps(data)
