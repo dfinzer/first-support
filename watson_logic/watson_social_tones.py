@@ -1,0 +1,5 @@
+OPENNESS = "Openness"
+CONSCIENTIOUSNESS = "Conscientiousness"
+EXTRAVERSION = "Extraversion"
+AGREEABLENESS = "Agreeableness"
+EMOTIONAL_RANGE = "Emotional Range"

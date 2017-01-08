@@ -1,0 +1,5 @@
+# curl -u "36d99842-e183-4178-8678-2c2b4618af80":"jibekXXNEbU3" -H "Content-Type: application/json" -d "{\"text\": \"Hey Chief.  I feel very depressed.  I've been traumatized by a homicide case. \"}" "https://gateway.watsonplatform.net/tone-analyzer/api/v3/tone?version=2016-05-19"
+USERNAME = "36d99842-e183-4178-8678-2c2b4618af80"
+PASSWORD = "jibekXXNEbU3"
+CONTENT_TYPE = "application/json"
+URL = "https://gateway.watsonplatform.net/tone-analyzer/api/v3/tone?version=2016-05-19"

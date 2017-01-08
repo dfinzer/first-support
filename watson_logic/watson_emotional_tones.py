@@ -1,0 +1,5 @@
+JOY = "joy"
+FEAR = "fear"
+SADNESS = "sadness"
+DISGUST = "disgust"
+ANGER = "anger"
