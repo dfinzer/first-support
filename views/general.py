@@ -23,12 +23,18 @@ def avs():
 
 @app.route('/avs_return')
 def avs_return():
-	avs_verify_url = "https://api.amazon.com/auth/O2/tokeninfo"
+	
 	avs_access = json.dumps(request.values.__dict__)
-	access_token = request.values.get("access_token")
-	verify = requests.get(avs_verify_url, params={"access_token":access_token}).json()
-	print verify
-	return json.dumps(resp)
+	badgenumber = request.values.get("officer")
+	question_array = [
+		"Have you experienced recurring, unwanted distressing memories of a work-related event.", 
+		"Have you experienced reliving the event as if it were happening again", 
+		"Have you experienced trying to avoid thinking about a specific work-related event?", 
+		"Have you experienced avoiding places, objects, activities or people that remind you of the event?", 
+		"Have you experienced irritability, feeling tense or on guard? ", 
+		"Have you experienced being on constant guard for danger? "
+		]
+	return json.dumps(question_array)
 	#return json.dumps(request.values.__dict__)
 	#return render_template('avs_return.html')
 
@@ -40,8 +46,12 @@ def start():
 def report():
     return render_template('report.html')
 
-@app.route('/use_alexa')
-def use_alexa():
+@app.route('/store_interview', methods=["POST"])
+def store_interview():
+	if request.method == 'POST':
+		posted = request.values.post
+		q_id = posted("question_id")
+		q_answer = posted("answer")
 	return render_template('use_alexa.html')
 
 @app.route('/signal', methods=["POST"])
