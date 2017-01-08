@@ -27,13 +27,14 @@ def avs_return():
 	avs_access = json.dumps(request.values.__dict__)
 	badgenumber = request.values.get("officer")
 	question_array = [
-		"Have you experienced recurring, unwanted distressing memories of a work-related event.", 
+		"Have you experienced recurring, unwanted distressing memories of a work-related event.",
 		"Have you experienced reliving the event as if it were happening again", 
-		"Have you experienced trying to avoid thinking about a specific work-related event?", 
-		"Have you experienced avoiding places, objects, activities or people that remind you of the event?", 
+		"Have you experienced trying to avoid thinking about a specific work-related event?",
+		"Have you experienced avoiding places, objects, activities or people that remind you of the event?",
 		"Have you experienced irritability, feeling tense or on guard? ", 
 		"Have you experienced being on constant guard for danger? "
 		]
+		
 	return json.dumps(question_array)
 	#return json.dumps(request.values.__dict__)
 	#return render_template('avs_return.html')
@@ -50,9 +51,9 @@ def report():
 def store_interview():
 	if request.method == 'POST':
 		posted = request.values.post
-		q_id = posted("question_id")
+		#q_id = posted("question_id")
 		q_answer = posted("answer")
-	return render_template('use_alexa.html')
+	return json.dumps({"store_result":"true"})
 
 @app.route('/signal', methods=["POST"])
 def signal():
@@ -71,7 +72,7 @@ def signal():
                 'LicenseKey': "57101804707473939007536796840064911726102607109433933006736111970083711786"
             }, files={"imageFile": f}).json()
             end = time.time()
-            print(end - start, "YOOOO")
+            print(end - start, "TIMING FOR RESPONSE")
             data = json.dumps(resp)
             r.lpush("mood_points", data)
             return data
@@ -94,3 +95,8 @@ def pie():
 def dashboard_data():
     data = [json.loads(x) for x in r.lrange('mood_points', 0, -1)]
     return json.dumps(data)
+
+@app.route('/admin_index')
+def admin_index():
+	return render_template('admin_index.html')
+	
