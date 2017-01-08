@@ -1,0 +1,177 @@
+{% extends "admin_template.html" %}
+
+{% block content %}
+<div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">
+                            Officer Robert Boling <small>Currently reporting...</small>
+                        </h1>
+                        <ol class="breadcrumb">
+                            <li class="active">
+                                <i class="fa fa-dashboard"></i> Real time analysis
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="alert alert-info alert-dismissable">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <i class="fa fa-info-circle"></i>  Pulling results from Rob's report...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- /.row -->
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i> Risk Factors Over Time</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div id="morris-area-chart"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i> Risk Factors Over Time</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div id="pie-chart"></div>
+                            </div>
+                            <img src="/assets/menu.png" width="100px">
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+
+            </div>
+            <!-- /.container-fluid -->
+     {% endblock %}
+
+     {% block scripts %}
+    <script>
+        //$('body').css('background-color', "white");
+        function poll() {
+            setTimeout(function() {
+                $.get("/dashboard_data", function(response) {
+                    var rawDataList = JSON.parse(response);
+                    var dataList = [];
+                    for (var l = 0; l < rawDataList.length; l++) {
+                        var aDataPoint = rawDataList[l];
+                        if (aDataPoint['FaceAnalysisResults'] && aDataPoint['FaceAnalysisResults'].length > 0) {
+                            dataList.push(aDataPoint);
+                        }
+                    }
+                    $("#data").html("");
+                    var dataOut = [];
+                    var k = 0;
+                    for (var i = 0; i < dataList.length; i++) {
+                        var theDataPoint = dataList[i];
+                        var analysis = theDataPoint['FaceAnalysisResults'];
+                        if (analysis && analysis.length > 0) {
+                            var data = analysis[0]['EmotionResult'];
+                            var containerDiv = $("<div>").addClass("containerDiv");
+                            var dataPointOut = {'age': k, 'population': data['Joy']};
+                            dataOut.push(dataPointOut);
+                            var emotions = ['Joy', 'Neutral', 'Surprise', 'Sadness', 'Disgust', 'Anger', 'Fear'];
+                            var pieData = [];
+                            for (j = 0; j < emotions.length; j++) {
+                                var newElement = $("<div>").text(emotions[j] + ": " + data[emotions[j]]);
+                                containerDiv.append(newElement);
+                                pieData.push({
+                                    'age': emotions[j],
+                                    'population': data[emotions[j]]
+                                });
+                            }
+                            if (i == 0) {
+                                plotData(pieData);
+                                $("#data").append(containerDiv);
+                            }
+                        }
+                        k++;
+                    }
+                    poll();
+                });
+            }, 200)
+        }
+        poll();
+
+
+
+    var width = 480,
+        height = 250,
+        radius = Math.min(width, height) / 2;
+
+    var color = d3.scaleOrdinal()
+        .range(["#417505", "#7ED321", "#B8E986", "#D9F0FF", "#F8E81C", "#F6A623", "#D0011B"]);
+
+    var arc = d3.arc()
+        .outerRadius(radius - 10)
+        .innerRadius(0);
+
+    var labelArc = d3.arc()
+        .outerRadius(radius - 40)
+        .innerRadius(radius - 40);
+
+    var pie = d3.pie()
+        .sort(null)
+        .value(function(d) { return d.population; });
+
+    var svg = d3.select("#pie-chart").append("svg")
+        .attr("width", width)
+        .attr("height", height)
+      .append("g")
+        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+    var INITIAL = true;
+
+    function plotData(data) {
+          if (INITIAL) {
+            var g = svg.selectAll(".arc")
+              .data(pie(data))
+              .enter()
+              .append("g")
+              .attr("class", "arc");
+
+              g.append("path")
+                  .attr("d", arc)
+                  .style("fill", function(d) { return color(d.data.age); });
+
+          } else {
+            console.log(data);
+            var path = svg.selectAll("path").data(pie(data)); // compute the new angles
+             path.transition().duration(750).attrTween("d", arcTween);
+          }
+          INITIAL = false;
+
+    }
+
+    // Store the displayed angles in _current.
+    // Then, interpolate from _current to the new angles.
+    // During the transition, _current is updated in-place by d3.interpolate.
+    function arcTween(a) {
+      var i = d3.interpolate(this._current, a);
+      this._current = i(0);
+      return function(t) {
+        return arc(i(t));
+      };
+    }
+
+    function type(d) {
+      d.population = +d.population;
+      return d;
+    }
+
+    </script>
+     {% endblock %}
