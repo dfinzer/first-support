@@ -43,16 +43,21 @@ def finish():
 @app.route('/signal', methods=["POST"])
 def signal():
     if request.method == 'POST':
-        print "HEREEE"
         f = request.files['file']
         if f:
             form_data = {
                 "timestamp": 0,
                 "previousFrameResult": ""
             }
+            import time
+
+            start = time.time()
+
             resp = requests.post(EMOVU_WEB_API_BASE_URL, data=form_data, headers={
                 'LicenseKey': "57101804707473939007536796840064911726102607109433933006736111970083711786"
             }, files={"imageFile": f}).json()
+            end = time.time()
+            print(end - start, "YOOOO")
             data = json.dumps(resp)
             r.lpush("mood_points", data)
             return data

@@ -39,7 +39,7 @@
         Webcam.set({
             width: WEBCAM_PORTAL_WIDTH,
             height: WEBCAM_PORTAL_HEIGHT,
-            image_format: 'png',
+            image_format: 'jpeg',
             jpeg_quality: 20,
             force_flash: false,
             flip_horiz: false,
@@ -122,6 +122,7 @@
         }
 
         function takeSnapshot() {
+            console.log("Snap");
             if (TAKING_SNAPSHOT) {
                 return;
             }

@@ -2,21 +2,35 @@
 
 {% block body %}
 <div id="data"></div>
+<svg width="960" height="500"></svg>
+
 {% endblock %}
 
 {% block scripts %}
     <script>
+        //$('body').css('background-color', "white");
         function poll() {
             setTimeout(function() {
                 $.get("/dashboard_data", function(response) {
-                    var dataList = JSON.parse(response);
+                    var rawDataList = JSON.parse(response);
+                    var dataList = [];
+                    for (var l = 0; l < rawDataList.length; l++) {
+                        var aDataPoint = rawDataList[l];
+                        if (aDataPoint['FaceAnalysisResults'] && aDataPoint['FaceAnalysisResults'].length > 0) {
+                            dataList.push(aDataPoint);
+                        }
+                    }
                     $("#data").html("");
+                    var dataOut = [];
+                    var k = 0;
                     for (var i = 0; i < dataList.length; i++) {
-                        var dataPoint = dataList[i];
-                        var analysis = dataPoint['FaceAnalysisResults'];
+                        var theDataPoint = dataList[i];
+                        var analysis = theDataPoint['FaceAnalysisResults'];
                         if (analysis && analysis.length > 0) {
                             var data = analysis[0]['EmotionResult'];
                             var containerDiv = $("<div>").addClass("containerDiv");
+                            var dataPointOut = {'date': k, 'close': data['Joy']};
+                            dataOut.push(dataPointOut);
                             var emotions = ['Joy', 'Neutral', 'Sadness', 'Disgust', 'Anger', 'Surprise', 'Fear'];
                             for (j = 0; j < emotions.length; j++) {
                                 console.log(data);
@@ -24,14 +38,67 @@
                                 var newElement = $("<div>").text(emotions[j] + ": " + data[emotions[j]]);
                                 containerDiv.append(newElement);
                             }
-                            containerDiv.append($("<div>").text("--------"));
-                            $("#data").append(containerDiv);
+                            if (i == (dataList.length - 1)) {
+                                $("#data").append(containerDiv);
+                            }
                         }
+                        k++;
                     }
+                    console.log(dataOut);
+                    plotData(dataOut);
                     poll();
                 });
             }, 2000)
         }
         poll();
+
+
+
+
+var svg = d3.select("svg"),
+    margin = {top: 20, right: 20, bottom: 30, left: 50},
+    width = +svg.attr("width") - margin.left - margin.right,
+    height = +svg.attr("height") - margin.top - margin.bottom,
+    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var parseTime = d3.timeParse("%d-%b-%y");
+
+var x = d3.scaleTime()
+    .rangeRound([0, width]);
+
+var y = d3.scaleLinear()
+    .rangeRound([height, 0]);
+
+var line = d3.line()
+    .x(function(d) { return x(d.date); })
+    .y(function(d) { return y(d.close); });
+
+function plotData(data) {
+  x.domain(d3.extent(data, function(d) { return d.date; }));
+  y.domain(d3.extent(data, function(d) { return d.close; }));
+
+  g.append("g")
+      .attr("class", "axis axis--x")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+  g.append("g")
+      .attr("class", "axis axis--y")
+      .call(d3.axisLeft(y))
+    .append("text")
+      .attr("fill", "#000")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", "0.71em")
+      .style("text-anchor", "end")
+      .text("Percent");
+
+  g.append("path")
+      .datum(data)
+      .attr("class", "line")
+      .attr("d", line);
+}
+plotData();
+
     </script>
 {% endblock %}
