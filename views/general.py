@@ -15,6 +15,15 @@ def index():
 def webcam():
     return render_template('webcam.html')
 
+@app.route('/avs')
+def avs():
+    return render_template('avs.html')
+
+@app.route('/avs_return')
+def avs_return():
+	return json.dumps(request.values.__dict__)
+	#return render_template('avs_return.html')
+
 @app.route('/signal', methods=["POST"])
 def signal():
     if request.method == 'POST':
