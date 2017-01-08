@@ -74,7 +74,7 @@ svg {
                                 <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i> Risk Factors Over Time</h3>
                             </div>
                             <div class="panel-body">
-                                <div><svg width="580" height="300" id='over-time'></svg></div>
+                                <div><svg width="480" height="300" id='over-time'></svg></div>
                             </div>
                         </div>
                     </div>
@@ -104,10 +104,6 @@ svg {
             setTimeout(function() {
                 $.get("/dashboard_data", function(response) {
                     var rawDataList = JSON.parse(response);
-                    var truncation = 20;
-                    if (rawDataList.length > truncation) {
-                      rawDataList = rawDataList.slice(rawDataList.length - truncation, rawDataList.length - 1);
-                    }
                     var dataList = [];
                     for (var l = 0; l < rawDataList.length; l++) {
                         var aDataPoint = rawDataList[l];
@@ -128,8 +124,6 @@ svg {
                             var dataPointOut = {'date': k, 'joy': data['Joy'], 'neutral': data['Neutral'], 'sadness': data['Sadness'], 'disgust': data['Disgust'], 'anger': data['Anger'], 'surprise': data['Surprise'], 'fear': data['Fear']};
                             dataOut.push(dataPointOut);
 
-                            plotGraph(dataOut);
-                            
                             var pieData = [];
                             for (j = 0; j < emotions.length; j++) {
                                 var newElement = $("<div>").text(emotions[j] + ": " + data[emotions[j]]);
@@ -146,6 +140,7 @@ svg {
                         }
                         k++;
                     }
+                    plotGraph(dataOut);
                     poll();
                 });
             }, 200)
@@ -210,7 +205,7 @@ svg {
           }
 
           var svg = d3.select("svg#over-time"),
-            margin = {top: 20, right: 0, bottom: 50, left: 40},
+            margin = {top: 20, right: 20, bottom: 50, left: 50},
             width = +svg.attr("width") - margin.left - margin.right,
             height = +svg.attr("height") - margin.top - margin.bottom;
 
@@ -280,49 +275,42 @@ svg {
               .datum(data)
               .attr("class", "line")
               .attr("d", joyLine)
-              .attr("stroke", "#417505");
-              //.attr("stroke", "green");
+              .attr("stroke", "green");
 
           g.append("path")
               .datum(data)
               .attr("class", "line")
-              //.attr("stroke", "purple")
-              .attr("stroke", "#7ED321")
+              .attr("stroke", "purple")
               .attr("d", neutralLine);
 
           g.append("path")
               .datum(data)
               .attr("class", "line")
-              //.attr("stroke", "blue")
-              .attr("stroke", "#D9F0FF")
+              .attr("stroke", "blue")
               .attr("d", sadnessLine);
 
           g.append("path")
               .datum(data)
               .attr("class", "line")
-              //.attr("stroke", "brown")
-              .attr("stroke", "#F8E81C")
+              .attr("stroke", "brown")
               .attr("d", disgustLine);
 
           g.append("path")
               .datum(data)
               .attr("class", "line")
               .attr("d", angerLine)
-              .attr("stroke", "#F6A623");
-              //.attr("stroke", "red");
+              .attr("stroke", "red");
 
           g.append("path")
               .datum(data)
               .attr("class", "line")
-              //.attr("stroke", "orange")
-              .attr("stroke", "#B8E986")
+              .attr("stroke", "orange")
               .attr("d", surpriseLine);
 
           g.append("path")
               .datum(data)
               .attr("class", "line")
-              //.attr("stroke", "black")
-              .attr("stroke", "#D0011B")
+              .attr("stroke", "black")
               .attr("d", fearLine);
 
           var emotionData = d3.scaleOrdinal()
