@@ -2,3 +2,4 @@ dea
 venv/
 *.pyc
 env/
+.idea*

@@ -55,6 +55,7 @@ def signal():
             }, files={"imageFile": f}).json()
             data = json.dumps(resp)
             r.set("mood_data", data)
+            #r.append()
             return data
 
 
