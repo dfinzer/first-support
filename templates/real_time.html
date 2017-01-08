@@ -1,6 +1,44 @@
 {% extends "admin_template.html" %}
 
 {% block content %}
+<style>
+
+/*.axis--x path {
+  display: none;
+}*/
+
+/*.line {
+  stroke: steelblue;
+  stroke-width: 1px;
+  fill: none;
+}*/
+
+.line {
+  stroke-width: 1px;
+  fill: none;
+}
+
+svg {
+  background-color: white;
+}
+
+#legend_data {
+  background-color: white;
+  text-align: center;
+  margin-left:auto;
+  margin-right: 20px;
+  font-size: 16px;
+}
+#chart_title {
+  background-color: white;
+  text-align: center;
+  margin-left:auto;
+  margin-right: auto;
+  color: black;
+}
+
+</style>
+
 <div class="container-fluid">
 
                 <!-- Page Heading -->
@@ -36,7 +74,7 @@
                                 <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i> Risk Factors Over Time</h3>
                             </div>
                             <div class="panel-body">
-                                <div id="morris-area-chart"></div>
+                                <div><svg width="480" height="300" id='over-time'></svg></div>
                             </div>
                         </div>
                     </div>
@@ -82,9 +120,10 @@
                         if (analysis && analysis.length > 0) {
                             var data = analysis[0]['EmotionResult'];
                             var containerDiv = $("<div>").addClass("containerDiv");
-                            var dataPointOut = {'age': k, 'population': data['Joy']};
-                            dataOut.push(dataPointOut);
                             var emotions = ['Joy', 'Neutral', 'Surprise', 'Sadness', 'Disgust', 'Anger', 'Fear'];
+                            var dataPointOut = {'date': k, 'joy': data['Joy'], 'neutral': data['Neutral'], 'sadness': data['Sadness'], 'disgust': data['Disgust'], 'anger': data['Anger'], 'surprise': data['Surprise'], 'fear': data['Fear']};
+                            dataOut.push(dataPointOut);
+
                             var pieData = [];
                             for (j = 0; j < emotions.length; j++) {
                                 var newElement = $("<div>").text(emotions[j] + ": " + data[emotions[j]]);
@@ -101,6 +140,7 @@
                         }
                         k++;
                     }
+                    plotGraph(dataOut);
                     poll();
                 });
             }, 200)
@@ -154,7 +194,127 @@
              path.transition().duration(750).attrTween("d", arcTween);
           }
           INITIAL = false;
+    }
 
+    function plotGraph(data) {
+
+          var element = document.getElementById("over-time").getElementsByTagName("g"), index;
+
+          for (index = element.length - 1; index >= 0; index--) {
+            element[index].parentNode.removeChild(element[index]);
+          }
+
+          var svg = d3.select("svg#over-time"),
+            margin = {top: 20, right: 20, bottom: 50, left: 50},
+            width = +svg.attr("width") - margin.left - margin.right,
+            height = +svg.attr("height") - margin.top - margin.bottom;
+
+          var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+          var x = d3.scaleTime()
+              .rangeRound([0, width]);
+
+          var xAxis = d3.axisBottom()
+              .scale(x)
+              .tickFormat(d3.timeFormat("%H:%M:%S"));
+
+          var y = d3.scaleLinear()
+              .rangeRound([height, 0]);
+
+          var yAxis = d3.axisLeft()
+              .scale(y);
+
+          var joyLine =  d3.line()
+              .x(function(d) { return x(d.date); })
+              .y(function(d) { return y(d.joy); });
+
+          var neutralLine =  d3.line()
+              .x(function(d) { return x(d.date); })
+              .y(function(d) { return y(d.neutral); });
+
+          var sadnessLine =  d3.line()
+              .x(function(d) { return x(d.date); })
+              .y(function(d) { return y(d.sadness); });
+
+          var disgustLine =  d3.line()
+              .x(function(d) { return x(d.date); })
+              .y(function(d) { return y(d.disgust); });
+
+          var angerLine =  d3.line()
+              .x(function(d) { return x(d.date); })
+              .y(function(d) { return y(d.anger); });
+
+          var surpriseLine =  d3.line()
+              .x(function(d) { return x(d.date); })
+              .y(function(d) { return y(d.surprise); });
+
+          var fearLine =  d3.line()
+              .x(function(d) { return x(d.date); })
+              .y(function(d) { return y(d.fear); });
+
+          x.domain(d3.extent(data, function(d) { return d["date"]; }));
+          //y.domain(d3.extent(data, function(d) { return d.close; }));
+          y.domain([0, 1]);
+
+          d3.axisBottom().tickValues(0);
+
+          g.append("g")
+              .attr("class", "axisHERE axis--x")
+              .attr("transform", "translate(0," + height + ")")
+              .call(xAxis)
+              .style("text-anchor", "end")
+              .selectAll("text")
+              .attr("transform", "rotate(-90)");
+
+
+          g.append("g")
+              .attr("class", "axis axis--y")
+              .call(yAxis);
+
+          g.append("path")
+              .datum(data)
+              .attr("class", "line")
+              .attr("d", joyLine)
+              .attr("stroke", "green");
+
+          g.append("path")
+              .datum(data)
+              .attr("class", "line")
+              .attr("stroke", "purple")
+              .attr("d", neutralLine);
+
+          g.append("path")
+              .datum(data)
+              .attr("class", "line")
+              .attr("stroke", "blue")
+              .attr("d", sadnessLine);
+
+          g.append("path")
+              .datum(data)
+              .attr("class", "line")
+              .attr("stroke", "brown")
+              .attr("d", disgustLine);
+
+          g.append("path")
+              .datum(data)
+              .attr("class", "line")
+              .attr("d", angerLine)
+              .attr("stroke", "red");
+
+          g.append("path")
+              .datum(data)
+              .attr("class", "line")
+              .attr("stroke", "orange")
+              .attr("d", surpriseLine);
+
+          g.append("path")
+              .datum(data)
+              .attr("class", "line")
+              .attr("stroke", "black")
+              .attr("d", fearLine);
+
+          var emotionData = d3.scaleOrdinal()
+            .domain(["Joy", "Neutral", "Sadness","Disgust","Anger","Surprise","Fear"]);
     }
 
     // Store the displayed angles in _current.
@@ -174,4 +334,4 @@
     }
 
     </script>
-     {% endblock %}
+{% endblock %}
