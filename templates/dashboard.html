@@ -22,12 +22,49 @@ svg {
   background-color: white;
 }
 
+#legend_data {
+  background-color: white;
+  text-align: center;
+  margin-left:auto; 
+  margin-right: 20px;
+  font-size: 16px;
+}
+#chart_title {
+  background-color: white;
+  text-align: center;
+  margin-left:auto; 
+  margin-right: auto;
+  color: black;
+}
+
 </style>
 <div id="moodtrends"></div>
 <div id="data"></div>
-<div id="legend_data"></div>
-<svg width="960" height="500"></svg>
-
+<h3 id="chart_title">Live Emotion Data</h3>
+<svg width="960" height="300"></svg>
+<table id="legend_data">
+    <tr>
+      <td style="color: green">Joy</td>
+    </tr>
+    <tr>
+      <td style="color: purple">Neutral</td>
+    </tr>
+    <tr>
+      <td style="color: blue">Sadness</td>
+    </tr>
+    <tr>
+      <td style="color: brown">Disgust</td>
+    </tr>
+    <tr>
+      <td style="color: red">Anger</td>
+    </tr>
+    <tr>
+      <td style="color: orange">Surprise</td>
+    </tr>
+    <tr>
+      <td style="color: black">Fear</td>
+    </tr>
+  </table>
 {% endblock %}
 
 {% block scripts %}
@@ -37,6 +74,11 @@ svg {
             setTimeout(function() {
                 $.get("/dashboard_data", function(response) {
                     var rawDataList = JSON.parse(response);
+                    console.log(rawDataList);
+                    var truncation = 20;
+                    if (rawDataList.length > truncation) {
+                      rawDataList = rawDataList.slice(rawDataList.length - truncation, rawDataList.length - 1);
+                    }
                     var dataList = [];
                     for (var l = 0; l < rawDataList.length; l++) {
                         var aDataPoint = rawDataList[l];
@@ -237,7 +279,7 @@ function plotData(data) {
   g.append("path")
       .datum(data)
       .attr("class", "line")
-      .attr("stroke", "yellow")
+      .attr("stroke", "orange")
       .attr("d", surpriseLine);
 
   g.append("path")
@@ -249,31 +291,31 @@ function plotData(data) {
   var emotionData = d3.scaleOrdinal()
     .domain(["Joy", "Neutral", "Sadness","Disgust","Anger","Surprise","Fear"]);
 
-  var legendRectSize = 20;
-  var legendSpacing = 2;
+  // var legendRectSize = 20;
+  // var legendSpacing = 2;
 
-  var legend = d3.select('#legend_data')
-    .data(emotionData.domain())
-    .enter()
-    .append('g')
-    .attr('class', 'legend')
-    .attr('transform', function(d, i) {
-        var height = legendRectSize;
-        var x = 0;
-        var y = i * height;
-        return 'translate(' + x + ',' + y + ')';
-    });
+  // var legend = d3.select('#legend_data')
+  //   .data(emotionData.domain())
+  //   .enter()
+  //   .append('g')
+  //   .attr('class', 'legend')
+  //   .attr('transform', function(d, i) {
+  //       var height = legendRectSize;
+  //       var x = 0;
+  //       var y = i * height;
+  //       return 'translate(' + x + ',' + y + ')';
+  //   });
 
-  legend.append('rect')
-    .attr('width', legendRectSize)
-    .attr('height', legendRectSize);
-    // .style('fill', color)
-    // .style('stroke', color);
+  // legend.append('rect')
+  //   .attr('width', legendRectSize)
+  //   .attr('height', legendRectSize);
+  //   // .style('fill', color)
+  //   // .style('stroke', color);
 
-  legend.append('text')
-    .attr('x', legendRectSize + legendSpacing)
-    .attr('y', legendRectSize - legendSpacing)
-    .text(function(d) { return d; });
+  // legend.append('text')
+  //   .attr('x', legendRectSize + legendSpacing)
+  //   .attr('y', legendRectSize - legendSpacing)
+  //   .text(function(d) { return d; });
 
 }
 
