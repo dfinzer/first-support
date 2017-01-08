@@ -78,11 +78,6 @@ def signal():
             return data
 
 
-
-@app.route('/dashboard')
-def dashboard():
-    return render_template('dashboard.html')
-
 @app.route('/finish')
 def finish():
     return render_template('finish.html')
@@ -96,11 +91,10 @@ def dashboard_data():
     data = [json.loads(x) for x in r.lrange('mood_points', 0, -1)]
     return json.dumps(data)
 
-@app.route('/admin_index')
+@app.route('/dashboard')
 def admin_index():
 	return render_template('admin_index.html')
 
-@app.route('/admin_charts')
-def admin_charts():
-	return render_template('admin_charts.html')
-	
+@app.route('/realtime')
+def realtime():
+    return render_template('real_time.html')
