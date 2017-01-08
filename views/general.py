@@ -40,6 +40,10 @@ def start():
 def report():
     return render_template('report.html')
 
+@app.route('/use_alexa')
+def use_alexa():
+	return render_template('use_alexa.html')
+
 @app.route('/signal', methods=["POST"])
 def signal():
     if request.method == 'POST':
