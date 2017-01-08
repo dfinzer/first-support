@@ -21,7 +21,13 @@ def avs():
 
 @app.route('/avs_return')
 def avs_return():
-	return json.dumps(request.values.__dict__)
+	avs_verify_url = "https://api.amazon.com/auth/O2/tokeninfo"
+	avs_access = json.dumps(request.values.__dict__)
+	access_token = request.values.get("access_token")
+	verify = requests.get(avs_verify_url, params={"access_token":access_token}).json()
+	print verify
+	return json.dumps(resp)
+	#return json.dumps(request.values.__dict__)
 	#return render_template('avs_return.html')
 
 @app.route('/signal', methods=["POST"])
